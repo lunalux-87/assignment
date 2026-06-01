@@ -1,0 +1,831 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+    <title>Yoonseo Lee | PersonalWebsite</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --header-bg: rgba(255, 255, 255, 0.95);
+            --border-color: #eaeaea;
+            --accent-color: #d9381e;
+            --secondary-text: #888888;
+            --card-bg: #fafafa;
+            --header-shadow: transparent;
+        }
+
+        body.dark-mode {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --header-bg: rgba(18, 18, 18, 0.95);
+            --border-color: #333333;
+            --accent-color: #ff4d30;
+            --secondary-text: #b0b0b0;
+            --card-bg: #1e1e1e;
+            --header-shadow: transparent;
+        }
+
+        body.scrolled {
+            --header-shadow: rgba(0, 0, 0, 0.05);
+        }
+        body.dark-mode.scrolled {
+            --header-shadow: rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            color: var(--text-color);
+            background: var(--bg-color);
+            line-height: 1.7;
+            transition: background 0.3s, color 0.3s;
+            word-break: keep-all;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--header-shadow);
+            z-index: 1000;
+            transition: box-shadow 0.3s;
+        }
+
+        .nav-container {
+            max-width: 1000px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 22px;
+            text-decoration: none;
+            color: var(--text-color);
+            text-transform: uppercase;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--secondary-text);
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 5px 0;
+        }
+
+        nav a.active, nav a:hover {
+            color: var(--text-color);
+            border-bottom: 2px solid var(--text-color);
+        }
+
+        #dark-mode-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+            min-height: 60vh;
+        }
+
+        .page {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+        }
+
+        .page.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .row {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .col-image {
+            flex: 1;
+            max-width: 320px;
+            width: 100%;
+        }
+
+        .col-image img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            display: block;
+            transition: opacity 0.4s ease;
+        }
+
+        .col-text {
+            flex: 2;
+        }
+
+        .col-text p {
+            margin-bottom: 15px;
+        }
+
+        .last-updated {
+            font-size: 13px;
+            color: var(--secondary-text);
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        .contact-labels {
+            margin-top: 15px;
+            font-size: 15px;
+        }
+
+        .contact-labels a {
+            color: var(--accent-color);
+            text-decoration: none;
+            margin: 0 5px;
+            font-weight: bold;
+        }
+
+        h5 {
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            text-transform: uppercase;
+        }
+
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .control-btns button {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--secondary-text);
+            padding: 4px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-left: 5px;
+        }
+
+        .control-btns button:hover {
+            color: var(--text-color);
+            border-color: var(--text-color);
+        }
+
+        .accordion-container {
+            border-top: 1px solid var(--border-color);
+        }
+
+        .year-btn, .semester-btn, .subject-btn {
+            width: 100%;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .year-btn {
+            padding: 18px 10px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .semester-container {
+            display: none;
+            padding-left: 15px;
+            padding-bottom: 10px;
+            background: var(--card-bg);
+        }
+
+        .semester-btn {
+            padding: 14px 10px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--secondary-text);
+        }
+
+        .subject-container {
+            display: none;
+            padding-left: 15px;
+            padding-bottom: 10px;
+            background: var(--bg-color);
+        }
+
+        .subject-btn {
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .details-container {
+            display: none;
+            padding: 15px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        .contact-box {
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            margin-top: 20px;
+            border-radius: 6px;
+            background: var(--card-bg);
+        }
+
+        #my-email {
+            color: var(--accent-color);
+            font-weight: bold;
+            transition: text-decoration 0.2s;
+        }
+        #my-email:hover {
+            text-decoration: underline;
+        }
+
+        .form-group {
+            margin-top: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        .submit-btn {
+            margin-top: 15px;
+            background: var(--text-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+
+        #btn-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 45px;
+            height: 45px;
+            background: var(--text-color);
+            color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 999;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 80px;
+            font-size: 13px;
+            color: var(--secondary-text);
+        }
+
+        body.dark-mode .location-link:hover {
+        color: #66b2ff !important;
+        }
+
+        .location-link {
+            color: var(--text-color);
+            text-transform: none;
+            text-decoration: underline;
+            transition: color 0.2s ease;
+        }
+
+        .location-link:hover {
+            color: #0066cc !important;
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                margin: 30px auto;
+            }
+            .row {
+                gap: 30px;
+            }
+            .col-image {
+                max-width: 280px;
+            }
+            .col-image img {
+                height: 310px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 20px;
+            }
+            
+            .nav-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            nav {
+                gap: 15px;
+            }
+
+            nav a {
+                font-size: 14px;
+            }
+
+            .container {
+                margin: 20px auto;
+            }
+
+            .row {
+                flex-direction: column;
+                gap: 25px;
+                align-items: center;
+            }
+
+            .col-image {
+                max-width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+
+            .col-image img {
+                width: 100%;
+                max-width: 320px;
+                height: 350px;
+            }
+
+            .col-text {
+                width: 100%;
+                text-align: left;
+            }
+
+            .accordion-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .control-btns {
+                width: 100%;
+                display: flex;
+                gap: 5px;
+            }
+
+            .control-btns button {
+                flex: 1;
+                margin-left: 0;
+                text-align: center;
+                padding: 6px 0;
+            }
+
+            .semester-container, .subject-container {
+                padding-left: 10px;
+            }
+            
+            .year-btn { padding: 15px 10px; font-size: 15px; }
+            .semester-btn { padding: 12px 10px; font-size: 14px; }
+            .subject-btn { padding: 10px; font-size: 13px; }
+
+            .contact-box {
+                padding: 15px;
+            }
+            #btn-top {
+                bottom: 20px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="nav-container">
+        <a class="navbar-brand" href="#home">YOONSEO LEE</a>
+        <div class="nav-right">
+            <nav>
+                <a href="#home" class="nav-link active">HOME</a>
+                <a href="#publication" class="nav-link">PUBLICATION</a>
+                <a href="#contact" class="nav-link">CONTACT</a>
+            </nav>
+            <button id="dark-mode-toggle">DARK</button>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+
+    <section id="home" class="page active">
+        <div class="row">
+            <div class="col-image">
+                <img id="profile-img" 
+                     src="picture_01.png"
+                     src_hover="picture_02.png" 
+                     alt="프로필" 
+                     onerror="this.src='https://via.placeholder.com/320x350?text=Photo+1'">
+            </div>
+            <div class="col-text">
+                <h5>RESEARCH INTEREST & BIOGRAPHY</h5>
+                <p>안녕하세요! <a href="https://www.kangwon.ac.kr/ko/index.do" target="_blank" style="color: var(--accent-color); font-weight: bold; text-decoration: none;">강원대학교</a> 
+                    <a href="https://cse.kangwon.ac.kr/cse/index.do" target="_blank" style="color: var(--accent-color); font-weight: bold; text-decoration: none;">컴퓨터공학과</a> 202514054학번 이윤서입니다.</p>
+                <p>현재 컴퓨터공학을 전공하고 있으며, HTML5, CSS3, JavaScript, jQuery를 활용한 웹 인터페이스 설계에 관심을 가지고 공부하고 있습니다.</p>
+                <p>이번 자기소개 홈페이지는 웹 프로그래밍 과제로 제작한 단일 페이지 애플리케이션(SPA)입니다.</p>  
+                <p>메뉴를 선택할 때마다 페이지 전체를 새로고침하지 않고 필요한 콘텐츠만 동적으로 변경되도록 구현하고자 했습니다.</p>    
+                <p>앞으로도 새로운 기술을 꾸준히 배우며 실무 역량을 키워 나가고, 더 나은 웹 서비스를 개발할 수 있는 개발자로 성장하고 싶습니다.</p>
+                
+                <p class="last-updated">Updated 1 June, 2026</p>
+
+                <div class="contact-labels">
+                    <strong>Quick Contact:</strong>
+                    <a href="mailto:202514054@kangwon.ac.kr">Email</a> |
+                    <a href="https://github.com/lunalux-87" target="_blank">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="publication" class="page">
+        <div class="accordion-header">
+            <h5>수강 과목 및 관심 분야</h5>
+            <div class="control-btns">
+                <button id="expand-all">모두 펼치기</button>
+                <button id="collapse-all">모두 접기</button>
+            </div>
+        </div>
+        
+        <div class="accordion-container">
+            <div class="year-group">
+                <button class="year-btn">2026년 <span>▼</span></button>
+                <div class="semester-container">
+                    <div class="semester-group">
+                        <button class="semester-btn">1학기 <span>▼</span></button>
+                        <div class="subject-container">
+                            <button class="subject-btn">■ 웹 프로그래밍</button>
+                            <div class="details-container">
+                                <p><strong>학점:</strong> 3학점</p>
+                                <p><strong>학습 내용:</strong> 웹 페이지와 웹 애플리케이션을 개발하기 위해 HTML, CSS, JavaScript등을 학습</p>
+                            </div>
+                            <button class="subject-btn">■ 자료구조</button>
+                            <div class="details-container">
+                                <p><strong>학점:</strong> 3학점</p>
+                                <p><strong>학습 내용:</strong> 자료를 효율적으로 저장·검색·처리하기 위한 기본 자료구조(배열, 리스트, 스택, 큐, 트리, 그래프)와 알고리즘, 시간 복잡도 분석을 학습하는 과목</p>
+                            </div>
+                            <button class="subject-btn">■ AI이산구조</button>
+                            <div class="details-container">
+                                <p><strong>학점:</strong> 3학점</p>
+                                <p><strong>학습 내용:</strong> 이산적인 수학 구조(논리, 집합, 관계, 함수, 그래프, 트리, 조합론 등)를 다루며 컴퓨터 과학의 이론적 기초를 학습하는 과목</p>
+                            </div>  
+                            <button class="subject-btn">■ 선형대수학</button>
+                            <div class="details-container">
+                                <p><strong>학점:</strong> 3학점</p>
+                                <p><strong>학습 내용:</strong> 벡터, 행렬, 선형변환, 연립선형방정식 등을 다루며 데이터 표현과 변환, 공간 구조를 분석하는 수학 과목</p>
+                            </div>  
+                            <button class="subject-btn">■ 동양의 고전</button>
+                            <div class="details-container">
+                                <p><strong>학점:</strong> 3학점</p>
+                                <p><strong>학습 내용:</strong> 사기를 중심으로 고대 중국의 역사 서술 방식과 인물 중심의 역사 이해를 학습하며 역사적 사건과 인간 행위의 해석 방법을 익히는 과목</p>
+                            </div>
+                            <button class="subject-btn">■ 미디어로 읽는 유럽신화와 예술</button>
+                            <div class="details-container">
+                                <p><strong>학점:</strong> 3학점</p>
+                                <p><strong>학습 내용:</strong> 그리스로마신화를 중심으로 신화 속 이야기와 서사를 다양한 미디어와 예술 작품을 통해 해석하고, 서양 문화와 예술에 반영된 신화적 상징과 구조를 이해하는 과목</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="semester-group">
+                        <button class="semester-btn">2학기 <span>▼</span></button>
+                        <div class="subject-container">
+                            <p style="padding: 10px; font-size: 14px; color: var(--secondary-text);">수강 예정 과목이 없습니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="year-group">
+                <button class="year-btn">2025년 <span>▼</span></button>
+                <div class="semester-container">
+                    <div class="semester-group">
+                        <button class="semester-btn">2학기 <span>▼</span></button>
+                        <div class="subject-container">
+                            <button class="subject-btn">■ C프로그래밍</button>
+                            <div class="details-container">
+                                <p><strong>학점:</strong> 3학점</p>
+                                <p><strong>학습 내용:</strong> C 언어를 이용해 변수, 자료형, 제어문, 함수, 포인터, 메모리 관리 등을 학습하고 기본적인 시스템 프로그래밍 능력을 기르는 과목</p>
+                            </div>  
+                            <button class="subject-btn">■ 자바프로그래밍2</button>
+                            <div class="details-container">
+                                <p><strong>학점:</strong> 3학점</p>
+                                <p><strong>학습 내용:</strong> 자바 언어를 기반으로 객체지향 프로그래밍 심화(상속, 다형성, 인터페이스), 예외 처리, 컬렉션 프레임워크, GUI 또는 네트워크 프로그래밍 등을 학습하는 과목</p>
+                            </div>
+                             <button class="subject-btn">■ 인공지능의 이해</button>
+                            <div class="details-container">
+                                <p><strong>학점:</strong> 3학점</p>
+                                <p><strong>학습 내용:</strong> 인공지능의 기본 개념과 역사, 머신러닝·딥러닝의 기초 원리, 데이터와 알고리즘을 활용한 문제 해결 방법을 개괄적으로 학습하는 과목</p>
+                            </div>
+                            <button class="subject-btn">■ 기본영어(듣기말하기)</button>
+                            <div class="details-container">
+                                <p><strong>학점:</strong> 3학점</p>
+                                <p><strong>학습 내용:</strong> 주제 기반 영어 발표와 토론을 중심으로 듣기 이해력과 말하기 표현 능력을 향상시키는 의사소통 중심의 영어 과목</p>
+                            </div>
+                            <button class="subject-btn">■ 지속가능발전의 이해</button>
+                            <div class="details-container">
+                                <p><strong>학점:</strong> 2학점</p>
+                                <p><strong>학습 내용:</strong> 지속가능발전의 개념과 원칙을 바탕으로 환경, 사회, 경제의 균형 있는 발전과 기후변화·자원 문제 등 글로벌 지속가능 이슈를 학습하는 과목</p>
+                            </div>
+                            <button class="subject-btn">■ 동서문화교류사</button>
+                            <div class="details-container">
+                                <p><strong>학점:</strong> 3학점</p>
+                                <p><strong>학습 내용:</strong> 동서 간의 역사적 교류 과정을 중심으로 문명 간 접촉, 문화 전파, 사상·기술·종교의 상호 영향 관계를 학습하는 과목</p>
+                            </div>
+                            <button class="subject-btn">■ 디지털스토리텔링프레젠테이션</button>
+                            <div class="details-container">
+                                <p><strong>학점:</strong> 3학점</p>
+                                <p><strong>학습 내용:</strong> 디지털 미디어를 활용해 이야기의 주제와 구조를 설정하고 인물, 사건, 전개 등을 설계하는 스토리 플롯 구성 중심으로 학습하는 과목</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="semester-group">
+                    <button class="semester-btn">1학기 <span>▼</span></button>
+                    <div class="subject-container">
+                        <button class="subject-btn">■ 컴퓨터개론</button>
+                        <div class="details-container">
+                            <p><strong>학점:</strong> 3학점</p>
+                            <p><strong>학습 내용:</strong> 컴퓨터의 기본 구조와 동작 원리, 하드웨어·소프트웨어 구성, 운영체제, 네트워크, 데이터 표현 등 컴퓨터 전반의 기초 개념을 학습하는 과목</p>
+                        </div>
+
+                        <button class="subject-btn">■ 자바프로그래밍1</button>
+                        <div class="details-container">
+                            <p><strong>학점:</strong> 3학점</p>
+                            <p><strong>학습 내용:</strong> 자바 언어의 기본 문법(변수, 자료형, 조건문, 반복문, 배열, 함수 등)과 객체지향 프로그래밍 기초를 학습하는 과목</p>
+                        </div>
+
+                        <button class="subject-btn">■ 컴퓨팅 사고력</button>
+                        <div class="details-container">
+                            <p><strong>학점:</strong> 3학점</p>
+                            <p><strong>학습 내용:</strong> 문제를 논리적으로 분석하고 분해하여 알고리즘적으로 해결하는 사고 과정과 기초 프로그래밍 및 문제 해결 방법을 학습하는 과목</p>
+                        </div>
+
+                        <button class="subject-btn">■ 학술적 글쓰기와 발표</button>
+                        <div class="details-container">
+                            <p><strong>학점:</strong> 3학점</p>
+                            <p><strong>학습 내용:</strong> 학술적 글쓰기의 구조와 논증 방법을 학습하고, 자료 조사·분석을 바탕으로 보고서 작성 및 발표 능력을 기르는 과목</p>
+                        </div>
+
+                        <button class="subject-btn">■ 기본영어(읽기쓰기)</button>
+                        <div class="details-container">
+                            <p><strong>학점:</strong> 3학점</p>
+                            <p><strong>학습 내용:</strong> 영어 지문 독해 전략과 문장 작성 방법을 학습하며 기초적인 읽기 이해력과 글쓰기 표현 능력을 향상시키는 과목</p>
+                        </div>
+
+                        <button class="subject-btn">■ 인간과 환경</button>
+                        <div class="details-container">
+                            <p><strong>학점:</strong> 3학점</p>
+                            <p><strong>학습 내용:</strong> 인간과 자연환경의 상호작용을 중심으로 환경 문제의 원인과 영향, 생태계 보전 및 지속가능한 삶의 방식에 대해 학습하는 과목</p>
+                        </div>
+
+                        <button class="subject-btn">■ 진로탐색과 꿈-설계</button>
+                        <div class="details-container">
+                            <p><strong>학점:</strong> 1학점</p>
+                            <p><strong>학습 내용:</strong> 자기 이해를 바탕으로 적성과 흥미를 분석하고 진로 방향을 탐색하며 구체적인 진로 설계와 계획 수립 방법을 학습하는 과목</p>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </section>
+
+    <section id="contact" class="page">
+        <h5>CONTACT INFO</h5>
+        <div class="contact-box">
+            <p><strong>Name :</strong> 이윤서 (Yoonseo Lee)</p>
+            <p><strong>Email :</strong> <span id="my-email">202514054@kangwon.ac.kr</span></p>
+            <p><strong>Location :</strong> <a href="https://naver.me/5B00LwIq" target="_blank" class="location-link">강원도 춘천시 강원대학길 1 (공과대학)</a></p>
+            <p style="margin-top:20px;"><a href="mailto:202514054@kangwon.ac.kr" style="color:var(--accent-color); font-weight:bold; text-decoration:none;">✉ 바로 메일 보내기</a></p>
+        </div>
+
+        <div class="contact-box" style="margin-top: 30px;">
+            <h5>Send a Message</h5>
+            <form id="contact-form">
+                <div class="form-group">
+                    <label for="user-name">이름</label>
+                    <input type="text" id="user-name" placeholder="이름을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="user-email">이메일</label>
+                    <input type="text" id="user-email" placeholder="발신자 메일을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="user-msg">메시지</label>
+                    <textarea id="user-msg" rows="4" placeholder="메시지를 입력하세요"></textarea>
+                </div>
+                <button type="submit" class="submit-btn">보내기</button>
+            </form>
+        </div>
+    </section>
+
+</div>
+
+<button id="btn-top">▲</button>
+
+<footer>
+    <p>Copyright @ 2026. 이윤서 (202514054@kangwon.ac.kr) All rights reserved.</p>
+</footer>
+
+<script>
+function showPage(hash){
+    if(!hash) hash = "#home";
+    $(".page").removeClass("active");
+    $(hash).addClass("active");
+    $(".nav-link").removeClass("active");
+    $('.nav-link[href="' + hash + '"]').addClass("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+$(window).on("hashchange", function(){
+    showPage(location.hash);
+});
+
+$(".nav-link").on("click", function(e){
+    e.preventDefault();
+    location.hash = $(this).attr("href");
+});
+
+$(document).ready(function(){
+    if(!location.hash) history.replaceState(null, null, "#home");
+    showPage(location.hash);
+
+    $('#dark-mode-toggle').click(function() {
+        $('body').toggleClass('dark-mode');
+        $(this).text($('body').hasClass('dark-mode') ? 'LIGHT' : 'DARK');
+    });
+
+    $('.year-btn, .semester-btn, .subject-btn').click(function() {
+        $(this).next().slideToggle(250);
+    });
+
+    $('#expand-all').click(function() {
+        $('.semester-container, .subject-container, .details-container').slideDown(250);
+    });
+
+    $('#collapse-all').click(function() {
+        $('.semester-container, .subject-container, .details-container').slideUp(250);
+    });
+
+    $('#my-email').css('cursor','pointer').click(function(){
+        navigator.clipboard.writeText($(this).text());
+        alert('이메일이 복사되었습니다!');
+    });
+
+    var $profileImg = $('#profile-img');
+    if ($profileImg.length) {
+        var originalSrc = $profileImg.attr('src');
+        var hoverSrc = $profileImg.attr('src_hover');
+        
+        if(hoverSrc) {
+            new Image().src = hoverSrc;
+        }
+
+        if (window.matchMedia('(hover: hover)').matches) {
+            $profileImg.on('mouseenter', function() {
+                if(hoverSrc) $(this).attr('src', hoverSrc);
+            }).on('mouseleave', function() {
+                $(this).attr('src', originalSrc);
+            });
+        } else {
+            $profileImg.on('touchstart', function() {
+                if(hoverSrc) $(this).attr('src', hoverSrc);
+            }).on('touchend touchcancel', function() {
+                $(this).attr('src', originalSrc);
+            });
+        }
+        
+        $(window).on('hashchange', function() {
+            $profileImg.css('opacity', '1').attr('src', originalSrc);
+        });
+    }
+
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 50) {
+            $('body').addClass('scrolled');
+            $('#btn-top').css('display', 'flex');
+        } else {
+            $('body').removeClass('scrolled');
+            $('#btn-top').hide();
+        }
+    });
+
+    $('#btn-top').click(function() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    $('#contact-form').submit(function(e) {
+        e.preventDefault();
+        
+        var name = $('#user-name').val().trim();
+        var email = $('#user-email').val().trim();
+        var msg = $('#user-msg').val().trim();
+        var emailReg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+        if (!name) {
+            alert('이름을 입력해 주세요.');
+            $('#user-name').focus();
+            return;
+        }
+        if (!email) {
+            alert('이메일을 입력해 주세요.');
+            $('#user-email').focus();
+            return;
+        }
+        if (!emailReg.test(email)) {
+            alert('올바른 이메일 형식이 아닙니다.');
+            $('#user-email').focus();
+            return;
+        }
+        if (!msg) {
+            alert('메시지를 입력해 주세요.');
+            $('#user-msg').focus();
+            return;
+        }
+
+        alert(name + '님, 메시지가 성공적으로 전송되었습니다! (과제용 시뮬레이션)');
+        $('#user-name').val('');
+        $('#user-email').val('');
+        $('#user-msg').val('');
+    });
+});
+</script>
+</body>
+</html>
